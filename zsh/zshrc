@@ -1,0 +1,147 @@
+# Personal zsh configuration of Cuong Giang
+
+#--------------------------------------------------------------------------
+# Oh My Zsh
+#--------------------------------------------------------------------------
+
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="robbyrussell"
+# git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
+# ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+#ZSH_THEME="spaceship"
+
+HYPHEN_INSENSITIVE="true"
+COMPLETION_WAITING_DOTS="true"
+HIST_STAMPS="yyyy-mm-dd"
+VI_MODE_SET_CURSOR=true
+VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+
+# git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# git clone https://github.com/agkozak/zsh-z $ZSH_CUSTOM/plugins/zsh-z
+plugins=(
+    git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    zsh-z
+)
+
+source $ZSH/oh-my-zsh.sh
+
+#--------------------------------------------------------------------------
+# Configuration
+#--------------------------------------------------------------------------
+
+# Decrease delay that vi-mode waits for the end of a key sequence
+export KEYTIMEOUT=15
+
+typeset -U path cdpath fpath
+path=(
+    /usr/local/bin
+    $HOME/.local/bin
+    $HOME/.composer/vendor/bin
+    $HOME/.go/bin
+    $HOME/.cargo/bin
+    ./vendor/bin
+    $HOME/.volta/bin
+    $HOME/.bun/bin
+    /Applications/Sublime\ Text.app/Contents/SharedSupport/bin
+    $path
+)
+
+setopt auto_cd
+cdpath=(
+    $HOME/Projects
+)
+
+export EDITOR=vim
+export GIT_EDITOR=vim
+
+unsetopt sharehistory
+
+#--------------------------------------------------------------------------
+# Aliases
+#--------------------------------------------------------------------------
+
+alias vim="nvim"
+alias copy="xclip -selection clipboard"
+alias paste="xclip -o -selection clipboard"
+alias cat="bat"
+alias webcam="gphoto2 --stdout --capture-movie | ffmpeg -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video2"
+alias sail='[ -f sail ] && sail || vendor/bin/sail'
+
+# Laravel
+alias a="artisan"
+alias tinker="artisan tinker"
+alias serve="artisan serve"
+alias mfs="artisan migrate:fresh --seed"
+
+# Git
+alias g="git"
+alias gs="git status"
+alias gl="git log"
+alias glo='git log --oneline --graph'
+alias ga='git add'
+alias gaa="git add ."
+alias gc="git commit -m "
+alias gp="git push"
+alias gpf='git push --force'
+alias gpft='git push --follow-tags'
+alias gpl='git pull --rebase'
+alias gcl='git clone'
+alias gst='git stash'
+alias grm='git rm'
+alias gmv='git mv'
+alias nah="git reset --hard && git clean -df"
+alias gco='git checkout'
+alias gcob='git checkout -b'
+alias main='git checkout $([ `git rev-parse --quiet --verify master` ] && echo "master" || echo "main")'
+alias master=main
+# Go to project root
+alias grt='cd "$(git rev-parse --show-toplevel)"'
+alias gb='git branch'
+alias gbd='git branch -d'
+
+alias grb='git rebase'
+alias grbom='git rebase origin/master'
+alias grbc='git rebase --continue'
+alias gxn='git clean -dn'
+alias gx='git clean -df'
+
+alias gsha='git rev-parse HEAD | pbcopy'
+
+alias ghci='gh run list -L 1'
+
+# Docker
+alias d="docker"
+alias dc="docker compose"
+
+# Common path
+alias sites="cd ~/Sites/"
+alias projects="cd ~/Projects/"
+
+open () {
+    xdg-open $* > /dev/null 2>&1
+}
+
+composer-link() {
+    composer config repositories.local '{"type": "path", "url": "'$1'"}' --file composer.json
+}
+
+function pip_install_save() {
+    package_name=$1
+    requirements_file=$2
+    if [[ -z $requirements_file ]]
+    then
+        requirements_file='./requirements.txt'
+    fi
+    pip install $package_name && pip freeze | grep -i $package_name >> $requirements_file
+}
+
+#--------------------------------------------------------------------------
+# Miscellaneous
+#--------------------------------------------------------------------------
+
+# Rbenv
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
