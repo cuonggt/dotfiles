@@ -17,4 +17,6 @@ mkdir -p $HOME/.local/bin
 
 ln -sf $DOTFILES/scripts/t $HOME/.local/bin/t
 
-# ln -sf $DOTFILES/.vscode/settings.json $HOME/Library/Application\ Support/Code/User/settings.json
+# macOS only
+# ln -sf /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl $HOME/.local/bin/subl # Sublime Text
+# ln -sf $DOTFILES/.vscode/settings.json $HOME/Library/Application\ Support/Code/User/settings.json # VS Code

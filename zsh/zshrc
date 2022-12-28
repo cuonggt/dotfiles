@@ -46,7 +46,6 @@ path=(
     ./vendor/bin
     $HOME/.volta/bin
     $HOME/.bun/bin
-    /Applications/Sublime\ Text.app/Contents/SharedSupport/bin
     $path
 )
 
